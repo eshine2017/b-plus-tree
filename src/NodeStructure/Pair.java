@@ -1,17 +1,34 @@
 package NodeStructure;
 
 /**
- * Key-value pair
+ * Key-value pair defined to store data
  */
-public class Pair {
+public class Pair implements Comparable<Pair> {
 
-    int key;
-    String data;
+    private double key;
+    private String data;
 
     /** constructor */
-    public Pair(int key, String data) {
+    public Pair(double key, String data) {
         this.key = key;
         this.data = data;
+    }
+
+    /** return the key of this pair */
+    public double getKey() {
+        return key;
+    }
+
+    /** return the data of this pair */
+    public String getValue() {
+        return data;
+    }
+
+    /** comparable interface for Pair */
+    public int compareTo(Pair that) {
+        if (this.key < that.key) return -1;
+        else if (that.key < this.key) return 1;
+        else return 0;
     }
 
     @Override

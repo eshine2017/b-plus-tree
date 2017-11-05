@@ -7,9 +7,8 @@ import java.util.ArrayList;
  */
 public class IndexNode extends Node {
 
-    int n;                      // number of keys
-    ArrayList<Integer> keys;    // list of keys, index starts from 1
-    ArrayList<Node> pointers;   // list of pointers, index starts from 0
+    ArrayList<Integer> keys;    // list of keys, for ith key, its left child is i and right child i+1
+    ArrayList<Node> children;   // list of children
 
     /** constructor */
     public IndexNode() {
