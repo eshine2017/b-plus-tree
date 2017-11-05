@@ -7,8 +7,16 @@ import java.util.ArrayList;
  */
 public class IndexNode extends Node {
 
-    private ArrayList<Double> keys;    // list of keys, for ith key, its left child is i and right child i+1
+    private ArrayList<Double> keys;     // list of keys, for ith key, its left child is i and right child i+1
     private ArrayList<Node> children;   // list of children
+
+    /** constructor from lists of keys and children */
+    public IndexNode(int m, ArrayList<Double> keys, ArrayList<Node> children) {
+        this.m = m;
+        n = keys.size();
+        this.keys = keys;
+        this.children = children;
+    }
 
     /** constructor from a key and its child */
     public IndexNode(int m, double key, Node node) {
@@ -31,9 +39,9 @@ public class IndexNode extends Node {
     }
 
     /*
-        use binary search to find the index of entry in keys,
-        whose value is just larger than given key
-        */
+    use binary search to find the index of entry in keys,
+    whose value is just larger than given key
+    */
     private int searchKey(double key) {
         int left = 0;
         int right = keys.size() - 1;
@@ -47,6 +55,14 @@ public class IndexNode extends Node {
     }
 
     /**
+     * insert the given node to the first place of children list
+     * @param node
+     */
+    public void addToFirst(Node node) {
+        children.add(0, node);
+    }
+
+    /**
      * search the corresponding child which should take this pair
      * @param pair
      * @return the address of corresponding child
@@ -57,6 +73,34 @@ public class IndexNode extends Node {
             return children.get(children.size() - 1);
         int index = searchKey(key);
         return children.get(index);
+    }
+
+    /**
+     * split a overfull index node
+     * @return a new index node with the new index node as its child
+     */
+    public IndexNode split() {
+
+        // move the right half keys and children to new index node
+        ArrayList<Double> newKeys = new ArrayList<>();
+        ArrayList<Node> newChildren = new ArrayList<>();
+        newChildren.add(children.get(children.size() - 1));
+        children.remove(children.size() - 1);
+        for (int i = keys.size() - 1; i > m/2; i--) {
+            newKeys.add(0, keys.get(i));
+            newChildren.add(0, children.get(i));
+            keys.remove(i);
+            children.remove(i);
+        }
+
+        // new index to store the new keys and children
+        IndexNode newNode = new IndexNode(m, newKeys, newChildren);
+
+        // create a new index node to merge with parent
+        double key = keys.get(keys.size() - 1);
+        keys.remove(keys.size() - 1);
+        return new IndexNode(m, key, newNode);
+
     }
 
     /**
