@@ -5,8 +5,8 @@ package NodeStructure;
  */
 public class Pair implements Comparable<Pair> {
 
-    private double key;
-    private String data;
+    private final double key;
+    private final String data;
 
     /** constructor */
     public Pair(double key, String data) {
