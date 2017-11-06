@@ -1,5 +1,7 @@
 package NodeStructure;
 
+import java.util.ArrayList;
+
 /**
  * Abstract class Node for IndexNode and DataNode
  */
@@ -14,9 +16,19 @@ public abstract class Node {
 
     }
 
-    /** abstract search method */
-    public Node search(Pair pair) {
+    /** abstract search method using pair */
+    public Node searchChild(Pair pair) {
         return null;
+    }
+
+    /** abstract search method using key */
+    public Node searchChild(double key) {
+        return null;
+    }
+
+    /** abstract search method */
+    public void search(double key, ArrayList<String> vals) {
+
     }
 
     /** abstract insert method */

@@ -67,8 +67,20 @@ public class IndexNode extends Node {
      * @param pair
      * @return the address of corresponding child
      */
-    public Node search(Pair pair) {
+    public Node searchChild(Pair pair) {
         double key = pair.getKey();
+        if (key >= keys.get(keys.size() - 1))
+            return children.get(children.size() - 1);
+        int index = searchKey(key);
+        return children.get(index);
+    }
+
+    /**
+     * search for the child who may have the pair with given key
+     * @param key
+     * @return the address of corresponding child
+     */
+    public Node searchChild(double key) {
         if (key >= keys.get(keys.size() - 1))
             return children.get(children.size() - 1);
         int index = searchKey(key);

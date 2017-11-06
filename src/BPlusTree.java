@@ -15,7 +15,11 @@ public class BPlusTree {
         this.m = m;
     }
 
-    /** insert a new key-val pair to the tree */
+    /**
+     * insert a new key-val pair to the tree
+     * @param key
+     * @param val
+     */
     public void insert(double key, String val) {
         Pair pair = new Pair(key, val);
 
@@ -41,7 +45,7 @@ public class BPlusTree {
 
         // if current node is a index node, search next node
         else {
-            Node nextNode = node.search(pair);
+            Node nextNode = node.searchChild(pair);
             insert(nextNode, pair);
             // if next node becomes overfull, split it and merge current node with new entry
             if (nextNode.isOverfull()) {
@@ -52,9 +56,26 @@ public class BPlusTree {
 
     }
 
-    /** search for all values corresponding to given key */
+    /**
+     * search for all values corresponding to given key
+     * @param key
+     * @return a list of all values corresponding to this key, void if search miss
+     */
     public ArrayList<String> search(double key) {
-        return new ArrayList<>();
+
+        ArrayList<String> vals = new ArrayList<>();
+        if (root == null) return vals; // B+ tree is void, return nothing
+
+        // go all the way down along the path to get to the data node
+        Node node = root;
+        while (!node.isDataNode()) {
+            node = node.searchChild(key);
+        }
+
+        // add matching values from data node and its left neighbor
+        node.search(key, vals);
+        return vals;
+
     }
 
     /** search for all the pairs whose key are between key1 and key2 */

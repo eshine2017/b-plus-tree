@@ -30,6 +30,61 @@ public class DataNode extends Node {
         this.right = right;
     }
 
+    /*
+    use binary search to find the index of pair,
+    will just return the index it terminated if search miss
+    */
+    private int searchPair(double key) {
+        int left = 0;
+        int right = pairs.size() - 1;
+        while (left < right) {
+            int mid = (left + right)/2;
+            if (key < pairs.get(mid).getKey()) {
+                right = mid - 1;
+            } else if (key > pairs.get(mid).getKey()) {
+                left = mid + 1;
+            } else return mid;
+        }
+        return left;
+    }
+
+    /**
+     * search the matched pairs with given key, add values to list
+     * @param key
+     * @param vals the list which will have all values after search
+     */
+    public void search(double key, ArrayList<String> vals) {
+        int index = searchPair(key);
+
+        // add all matched values in the right
+        DataNode node = this;
+        int r = index + 1;
+        while (true) {
+            if (r >= node.pairs.size() && node.right != null) {
+                node = node.right;
+                r = 0;
+            }
+            if (r < node.pairs.size() && key == pairs.get(r).getKey()) {
+                vals.add(pairs.get(r).getValue());
+                r++;
+            } else break;
+        }
+
+        // add all matched values in the left
+        node = this;
+        int l = index;
+        while (true) {
+            if (l < 0 && node.left != null) {
+                node = node.left;
+                l = node.pairs.size() - 1;
+            }
+            if (l >= 0 && key == pairs.get(l).getKey()) {
+                vals.add(pairs.get(l).getValue());
+                l--;
+            } else break;
+        }
+    }
+
     /** insert a new pair using binary search to maintain order */
     public void insert(Pair pair) {
         int left = 0;
