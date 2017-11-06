@@ -78,9 +78,27 @@ public class BPlusTree {
 
     }
 
-    /** search for all the pairs whose key are between key1 and key2 */
+    /**
+     * search for all the pairs whose key are between key1 and key2
+     * @param key1 the small key
+     * @param key2 the large key
+     * @return a list of pairs whose keys are between key1 (include) and key2 (include)
+     */
     public ArrayList<Pair> search(double key1, double key2) {
-        return null;
+
+        ArrayList<Pair> pairs = new ArrayList<>();
+        if (root == null) return pairs;
+
+        // use key2 to find one data node
+        Node node = root;
+        while (!node.isDataNode()) {
+            node = node.searchChild(key2);
+        }
+
+        // using the doubly linked list to add all pairs within the range
+        node.search(key1, key2, pairs);
+        return pairs;
+
     }
 
 }

@@ -31,6 +31,11 @@ public abstract class Node {
 
     }
 
+    /** abstract range search method */
+    public void search(double key1, double key2, ArrayList<Pair> res) {
+
+    }
+
     /** abstract insert method */
     public void insert(Pair pair) {
 

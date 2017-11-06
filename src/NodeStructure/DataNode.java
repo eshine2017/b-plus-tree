@@ -85,6 +85,46 @@ public class DataNode extends Node {
         }
     }
 
+    /**
+     * use key2 to get the first index, then access two links to get all pairs
+     * @param key1
+     * @param key2
+     * @param res the resulting list of pairs
+     */
+    public void search(double key1, double key2, ArrayList<Pair> res) {
+        int index = searchPair(key2);
+
+        // add all matched pairs in the right
+        DataNode node = this;
+        int r = index + 1;
+        while (true) {
+            if (r >= node.pairs.size() && node.right != null) {
+                node = node.right;
+                r = 0;
+            }
+            if (r < node.pairs.size() && key1 <= pairs.get(r).getKey()
+                    && key2 >= pairs.get(r).getKey()) {
+                res.add(pairs.get(r));
+                r++;
+            } else break;
+        }
+
+        // add all matched pairs in the left
+        node = this;
+        int l = index;
+        while (true) {
+            if (l < 0 && node.left != null) {
+                node = node.left;
+                l = node.pairs.size() - 1;
+            }
+            if (l >= 0 && key1 <= pairs.get(l).getKey()
+                    && key2 >= pairs.get(l).getKey()) {
+                res.add(pairs.get(l));
+                l--;
+            } else break;
+        }
+    }
+
     /** insert a new pair using binary search to maintain order */
     public void insert(Pair pair) {
         int left = 0;
