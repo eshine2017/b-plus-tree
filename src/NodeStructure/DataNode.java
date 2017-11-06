@@ -79,7 +79,7 @@ public class DataNode extends Node {
                 l = node.pairs.size() - 1;
             }
             if (l >= 0 && key == pairs.get(l).getKey()) {
-                vals.add(pairs.get(l).getValue());
+                vals.add(0, pairs.get(l).getValue());
                 l--;
             } else break;
         }
@@ -119,7 +119,7 @@ public class DataNode extends Node {
             }
             if (l >= 0 && key1 <= pairs.get(l).getKey()
                     && key2 >= pairs.get(l).getKey()) {
-                res.add(pairs.get(l));
+                res.add(0, pairs.get(l));
                 l--;
             } else break;
         }
