@@ -47,7 +47,7 @@ public class treesearch {
                     }
                 }
             } else { // range search
-                System.out.println("range search");
+                //System.out.println("range search");
                 ArrayList<Pair> pairs = tree.search(val1, Double.parseDouble(val2));
                 if (pairs.size() == 0) msg = "Null";
                 else {

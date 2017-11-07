@@ -39,17 +39,20 @@ public class IndexNode extends Node {
     }
 
     /*
-    use binary search to find the index of entry in keys,
-    whose value is just larger than given key
+    use binary search to find the index of child which may contain key
     */
     private int searchKey(double key) {
         int left = 0;
         int right = keys.size() - 1;
-        while (left < right) {
+        while (left <= right) {
             int mid = (left + right)/2;
-            if (key < keys.get(mid)) {
+            if (key == keys.get(mid)) {
+                return mid + 1;
+            }
+            else if (key < keys.get(mid)) {
                 right = mid - 1;
-            } else left = mid + 1;
+            }
+            else left = mid + 1;
         }
         return left;
     }
@@ -69,8 +72,6 @@ public class IndexNode extends Node {
      */
     public Node searchChild(Pair pair) {
         double key = pair.getKey();
-        if (key >= keys.get(keys.size() - 1))
-            return children.get(children.size() - 1);
         int index = searchKey(key);
         return children.get(index);
     }
@@ -81,8 +82,6 @@ public class IndexNode extends Node {
      * @return the address of corresponding child
      */
     public Node searchChild(double key) {
-        if (key >= keys.get(keys.size() - 1))
-            return children.get(children.size() - 1);
         int index = searchKey(key);
         return children.get(index);
     }
@@ -111,6 +110,8 @@ public class IndexNode extends Node {
         // create a new index node to merge with parent
         double key = keys.get(keys.size() - 1);
         keys.remove(keys.size() - 1);
+        n = keys.size();
+        //System.out.println("split index node: left: " + this + "; right: " + newNode);
         return new IndexNode(m, key, newNode);
 
     }
@@ -124,7 +125,20 @@ public class IndexNode extends Node {
         Node child = node.getChildren().get(0);
         int index = searchKey(key);
         keys.add(index, key);
-        children.add(index, child);
+        children.add(index+1, child);
+        n++;
+        //System.out.println("merge index node: " + this);
     }
 
+    @Override
+    /** key1,key2... */
+    public String toString() {
+        String str = "";
+        if (keys.size() == 0) return str;
+        str += keys.get(0);
+        for (int i = 1; i < keys.size(); i++) {
+            str += "," + keys.get(i);
+        }
+        return str;
+    }
 }

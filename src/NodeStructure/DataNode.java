@@ -19,7 +19,7 @@ public class DataNode extends Node {
         pairs = new ArrayList<>();
         pairs.add(pair);
         //System.out.println("Insert: " + pair);
-        System.out.println(this);
+        //System.out.println(this);
     }
 
     /** constructor from a list of pairs, left node and right node*/
@@ -100,7 +100,7 @@ public class DataNode extends Node {
      */
     public void search(double key1, double key2, ArrayList<Pair> res) {
         int index = searchPair(key2);
-        System.out.println("you make it!" + index);
+        //System.out.println("you make it!" + index);
 
         // add all matched pairs in the right
         DataNode node = this;
@@ -139,8 +139,9 @@ public class DataNode extends Node {
     public void insert(Pair pair) {
         int index = searchPair(pair.getKey());
         pairs.add(index, pair);
+        n++;
         //System.out.println("Insert: " + pair);
-        System.out.println(this);
+        //System.out.println(this);
     }
 
     /**
@@ -163,6 +164,8 @@ public class DataNode extends Node {
         this.right = newNode;
 
         // create a new index node to merge with parent
+        n = pairs.size();
+        //System.out.println("split data node: left: " + this + "; right: " + newNode);
         return new IndexNode(m, newPairs.get(0).getKey(), newNode);
 
     }

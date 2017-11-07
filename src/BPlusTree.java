@@ -1,6 +1,8 @@
 import NodeStructure.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Main B+ tree structure, supporting insert(key, value), search(key) and search(key1, key2)
@@ -29,10 +31,13 @@ public class BPlusTree {
         // else recursively insert from root to DataNode
         else insert(root, pair);
         if (root.isOverfull()) { // create a new root if it is overfull
+            //System.out.println("root is overfull!");
             IndexNode temp = root.split();
             temp.addToFirst(root);
             root = temp;
+            //System.out.println("create new root: " + root);
         }
+        //printTree();
     }
 
     /* recursively insert a Pair to this subtree */
@@ -99,6 +104,26 @@ public class BPlusTree {
         node.search(key1, key2, pairs);
         return pairs;
 
+    }
+
+    /* tree representation for debug */
+    private void printTree() {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            String line = "";
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                Node node = queue.poll();
+                line += "<" + node + ">";
+                if (!node.isDataNode()) {
+                    for (Node child : ((IndexNode) node).getChildren()) {
+                        queue.offer(child);
+                    }
+                }
+            }
+            System.out.println(line);
+        }
     }
 
 }
