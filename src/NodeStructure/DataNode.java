@@ -18,6 +18,8 @@ public class DataNode extends Node {
         n = 1;
         pairs = new ArrayList<>();
         pairs.add(pair);
+        //System.out.println("Insert: " + pair);
+        System.out.println(this);
     }
 
     /** constructor from a list of pairs, left node and right node*/
@@ -129,13 +131,24 @@ public class DataNode extends Node {
     public void insert(Pair pair) {
         int left = 0;
         int right = pairs.size() - 1;
-        while (left < right) {
+
+        // the insert index is where the old pair has a equal key or
+        // just larger key
+        while (left <= right) {
             int mid = (left + right)/2;
-            if (pair.compareTo(pairs.get(mid)) < 0) {
+            if (pair.compareTo(pairs.get(mid)) == 0) {
+                left = mid; // left pointer is where to insert
+                break;
+            }
+            else if (pair.compareTo(pairs.get(mid)) < 0) {
                 right = mid - 1;
-            } else left = mid + 1;
+            }
+            else left = mid + 1;
         }
+
         pairs.add(left, pair);
+        //System.out.println("Insert: " + pair);
+        System.out.println(this);
     }
 
     /**
@@ -160,6 +173,18 @@ public class DataNode extends Node {
         // create a new index node to merge with parent
         return new IndexNode(m, newPairs.get(0).getKey(), newNode);
 
+    }
+
+    @Override
+    /** (key1,val1),(key2,val2)... */
+    public String toString() {
+        String str = "";
+        if (pairs.size() == 0) return str;
+        str += pairs.get(0);
+        for (int i = 1; i < pairs.size(); i++) {
+            str += "," + pairs.get(i);
+        }
+        return str;
     }
 
 }
