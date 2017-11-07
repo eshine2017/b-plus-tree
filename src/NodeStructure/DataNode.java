@@ -7,9 +7,9 @@ import java.util.ArrayList;
  */
 public class DataNode extends Node {
 
-    private ArrayList<Pair> pairs;  // key-data pairs
-    private DataNode left;          // point to nearest left DataNode
-    private DataNode right;         // point to nearest right DataNode
+    ArrayList<Pair> pairs;  // key-data pairs
+    DataNode left;          // point to nearest left DataNode
+    DataNode right;         // point to nearest right DataNode
 
     /** constructor from a new pair */
     public DataNode(int m, Pair pair) {
@@ -33,19 +33,22 @@ public class DataNode extends Node {
     }
 
     /*
-    use binary search to find the index of pair,
-    will just return the index it terminated if search miss
+    use binary search to find the insert index of pair,
+    will return the index where the old pair has equal key or just larger key,
+    or pairs.size() if no such pair found
     */
     private int searchPair(double key) {
         int left = 0;
         int right = pairs.size() - 1;
-        while (left < right) {
+        while (left <= right) {
             int mid = (left + right)/2;
-            if (key < pairs.get(mid).getKey()) {
+            if (key == pairs.get(mid).getKey()) {
+                return mid;
+            }
+            else if (key < pairs.get(mid).getKey()) {
                 right = mid - 1;
-            } else if (key > pairs.get(mid).getKey()) {
-                left = mid + 1;
-            } else return mid;
+            }
+            else left = mid + 1;
         }
         return left;
     }
@@ -60,30 +63,32 @@ public class DataNode extends Node {
 
         // add all matched values in the right
         DataNode node = this;
-        int r = index + 1;
+        int r = index;
         while (true) {
             if (r >= node.pairs.size() && node.right != null) {
                 node = node.right;
                 r = 0;
             }
-            if (r < node.pairs.size() && key == pairs.get(r).getKey()) {
-                vals.add(pairs.get(r).getValue());
+            if (r < node.pairs.size() && key == node.pairs.get(r).getKey()) {
+                vals.add(node.pairs.get(r).getValue());
                 r++;
-            } else break;
+            }
+            else break;
         }
 
         // add all matched values in the left
         node = this;
-        int l = index;
+        int l = index - 1;
         while (true) {
             if (l < 0 && node.left != null) {
                 node = node.left;
                 l = node.pairs.size() - 1;
             }
-            if (l >= 0 && key == pairs.get(l).getKey()) {
-                vals.add(0, pairs.get(l).getValue());
+            if (l >= 0 && key == node.pairs.get(l).getKey()) {
+                vals.add(0, node.pairs.get(l).getValue());
                 l--;
-            } else break;
+            }
+            else break;
         }
     }
 
@@ -95,58 +100,45 @@ public class DataNode extends Node {
      */
     public void search(double key1, double key2, ArrayList<Pair> res) {
         int index = searchPair(key2);
+        System.out.println("you make it!" + index);
 
         // add all matched pairs in the right
         DataNode node = this;
-        int r = index + 1;
+        int r = index;
         while (true) {
             if (r >= node.pairs.size() && node.right != null) {
                 node = node.right;
                 r = 0;
             }
-            if (r < node.pairs.size() && key1 <= pairs.get(r).getKey()
-                    && key2 >= pairs.get(r).getKey()) {
-                res.add(pairs.get(r));
+            if (r < node.pairs.size() && key1 <= node.pairs.get(r).getKey()
+                    && key2 >= node.pairs.get(r).getKey()) {
+                res.add(node.pairs.get(r));
                 r++;
-            } else break;
+            }
+            else break;
         }
 
         // add all matched pairs in the left
         node = this;
-        int l = index;
+        int l = index - 1;
         while (true) {
             if (l < 0 && node.left != null) {
                 node = node.left;
                 l = node.pairs.size() - 1;
             }
-            if (l >= 0 && key1 <= pairs.get(l).getKey()
-                    && key2 >= pairs.get(l).getKey()) {
-                res.add(0, pairs.get(l));
+            if (l >= 0 && key1 <= node.pairs.get(l).getKey()
+                    && key2 >= node.pairs.get(l).getKey()) {
+                res.add(0, node.pairs.get(l));
                 l--;
-            } else break;
+            }
+            else break;
         }
     }
 
     /** insert a new pair using binary search to maintain order */
     public void insert(Pair pair) {
-        int left = 0;
-        int right = pairs.size() - 1;
-
-        // the insert index is where the old pair has a equal key or
-        // just larger key
-        while (left <= right) {
-            int mid = (left + right)/2;
-            if (pair.compareTo(pairs.get(mid)) == 0) {
-                left = mid; // left pointer is where to insert
-                break;
-            }
-            else if (pair.compareTo(pairs.get(mid)) < 0) {
-                right = mid - 1;
-            }
-            else left = mid + 1;
-        }
-
-        pairs.add(left, pair);
+        int index = searchPair(pair.getKey());
+        pairs.add(index, pair);
         //System.out.println("Insert: " + pair);
         System.out.println(this);
     }
