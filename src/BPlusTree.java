@@ -38,6 +38,7 @@ public class BPlusTree {
             //System.out.println("create new root: " + root);
         }
         //printTree();
+        //printData();
     }
 
     /* recursively insert a Pair to this subtree */
@@ -108,14 +109,20 @@ public class BPlusTree {
 
     /* tree representation for debug */
     private void printTree() {
+
+        // travel the tree by height using a queue
         Queue<Node> queue = new LinkedList<>();
         queue.add(root);
         while (!queue.isEmpty()) {
+
+            // add one node sequence with the same height
             String line = "";
             int size = queue.size();
             for (int i = 0; i < size; i++) {
                 Node node = queue.poll();
-                line += "<" + node + ">";
+                line += " <" + node + "> ";
+
+                // note data node, add its children
                 if (!node.isDataNode()) {
                     for (Node child : ((IndexNode) node).getChildren()) {
                         queue.offer(child);
@@ -124,6 +131,24 @@ public class BPlusTree {
             }
             System.out.println(line);
         }
+    }
+
+    /* go to the leftmost data node, print all the data along link */
+    private void printData() {
+
+        // go to the leftmost data node
+        Node node = root;
+        while (!node.isDataNode())
+            node = ((IndexNode) node).getChildren().get(0);
+
+        // print out data along link
+        String line = "";
+        while (node != null) {
+            line += " <" + node + "> ";
+            node = ((DataNode) node).right;
+        }
+        System.out.println(line);
+
     }
 
 }

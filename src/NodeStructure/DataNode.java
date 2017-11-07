@@ -7,9 +7,9 @@ import java.util.ArrayList;
  */
 public class DataNode extends Node {
 
-    ArrayList<Pair> pairs;  // key-data pairs
-    DataNode left;          // point to nearest left DataNode
-    DataNode right;         // point to nearest right DataNode
+    ArrayList<Pair> pairs;      // key-data pairs
+    public DataNode left;       // point to nearest left DataNode
+    public DataNode right;      // point to nearest right DataNode
 
     /** constructor from a new pair */
     public DataNode(int m, Pair pair) {
@@ -162,6 +162,7 @@ public class DataNode extends Node {
         DataNode right = this.right;
         DataNode newNode = new DataNode(m, newPairs, left, right);
         this.right = newNode;
+        if (right != null) right.left = newNode;
 
         // create a new index node to merge with parent
         n = pairs.size();
